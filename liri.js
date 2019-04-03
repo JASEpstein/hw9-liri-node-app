@@ -99,7 +99,6 @@ function movieThis(searchTerm) {
             console.log('Plot: ' + res.Plot);
             console.log('Actors: ' + res.Actors);
             console.log('===========================');
-
         })
         .catch(function (error) {
             console.log('error');
@@ -107,7 +106,23 @@ function movieThis(searchTerm) {
 }
 
 function defaultMovie() {
-
+    axios.get('http://www.omdbapi.com/?t=' + +'&apikey=eaa046d7')
+        .then(function (response) {
+            var res = response.data;
+            console.log('===========================');
+            console.log('Title: ' + res.Title);
+            console.log('Year: ' + res.Year);
+            console.log('IMDB Rating: ' + res.Ratings[0].Value);
+            console.log('Rotten Tomatoes Rating: ' + res.Ratings[1].Value);
+            console.log('Country Where Produced: ' + res.Country);
+            console.log('Language: ' + res.Language);
+            console.log('Plot: ' + res.Plot);
+            console.log('Actors: ' + res.Actors);
+            console.log('===========================');
+        })
+        .catch(function (error) {
+            console.log('Are you sure you spelled it right?');
+        })
 }
 
 
