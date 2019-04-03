@@ -2,6 +2,7 @@ require("dotenv").config();
 
 var axios = require("axios");
 var moment = require("moment");
+var fs = require("fs");
 var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
@@ -12,35 +13,35 @@ var searchTerm = process.argv.slice(3).join(" ");
 
 function concertThis(searchTerm) {
     axios.get('https://rest.bandsintown.com/artists/' + searchTerm + '/events?app_id=codingbootcamp').then(function (response) {
-            if (response.data === []) {
-                console.log('There were no results for that artist.');
+        if (response.data === []) {
+            console.log('There were no results for that artist.');
+        }
+        response.data.map(function (event, index) {
+            var name = event.venue.name;
+            var dateTime = event.datetime;
+            //For European locations that don't have a 'state' name
+            var city = ''
+            if (event.venue.region === '') {
+                city = event.venue.city + ', ' + event.venue.country;
+            } else {
+                city = event.venue.city + ', ' + event.venue.region;
             }
-            return response.data.map(function (event, index) {
-                var name = event.venue.name;
-                var dateTime = event.datetime;
-                //For European locations that don't have a 'state' name
-                var city = ''
-                if (event.venue.region === '') {
-                    city = event.venue.city + ', ' + event.venue.country;
-                } else {
-                    city = event.venue.city + ', ' + event.venue.region;
-                }
 
-                if (index <= 4) {
-                    console.log('==========================================');
-                    console.log('Event#' + (index + 1));
-                    console.log('Venue Name: ' + name);
-                    console.log('Location: ' + city);
-                    console.log('Date: ' + moment(dateTime).format("dddd, MMMM Do YYYY, h:mm a"));
-                    console.log('==========================================');
-                } else {
-                    return
-                }
-            })
+            if (index <= 4) {
+                console.log('==========================================');
+                console.log('Event#' + (index + 1));
+                console.log('Venue Name: ' + name);
+                console.log('Location: ' + city);
+                console.log('Date: ' + moment(dateTime).format("dddd, MMMM Do YYYY, h:mm a"));
+                console.log('==========================================');
+            } else {
+                return
+            }
         })
-        .catch(function (error) {
-            console.log('error');
-        })
+    })
+    // .catch(function (error) {
+    //     console.log('concert error');
+    // })
 }
 
 function spotifyThis(searchTerm) {
@@ -66,10 +67,11 @@ function spotifyThis(searchTerm) {
     })
 };
 
-function defaultSpotifyThis() {
+function defaultSpotifyThis(query) {
+    var query = query;
     spotify.search({
         type: 'track',
-        query: 'the sign ace of base',
+        query: query,
         limit: 1
     }, function (err, data) {
         if (err) {
@@ -106,7 +108,7 @@ function movieThis(searchTerm) {
 }
 
 function defaultMovie() {
-    axios.get('http://www.omdbapi.com/?t=' + +'&apikey=eaa046d7')
+    axios.get('http://www.omdbapi.com/?t=mr+nobody&apikey=eaa046d7')
         .then(function (response) {
             var res = response.data;
             console.log('===========================');
@@ -125,6 +127,24 @@ function defaultMovie() {
         })
 }
 
+function randomAction() {
+    var defaultArr = fs.readFileSync('random.txt').toString().match(/^.+$/gm);
+    var randNum = Math.floor(Math.random() * 3);
+    console.log(randNum);
+    switch (randNum) {
+        case 0:
+            defaultSpotifyThis(defaultArr[1]);
+            break;
+        case 1:
+            movieThis(defaultArr[3]);
+            break;
+        case 2:
+            concertThis(defaultArr[5]);
+            break;
+    }
+
+}
+
 
 switch (searchType) {
 
@@ -136,7 +156,7 @@ switch (searchType) {
         if (searchTerm) {
             spotifyThis(searchTerm);
         } else {
-            defaultSpotifyThis();
+            defaultSpotifyThis('the sign ace of base');
         }
         break;
 
@@ -146,6 +166,10 @@ switch (searchType) {
         } else {
             defaultMovie();
         }
+        break;
+
+    case 'do-what-it-says':
+        randomAction();
         break;
 
 }
