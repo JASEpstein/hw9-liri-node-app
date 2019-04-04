@@ -130,21 +130,23 @@ function defaultMovie() {
 function randomAction() {
     var defaultArr = fs.readFileSync('random.txt').toString().match(/^.+$/gm);
     var randNum = Math.floor(Math.random() * 3);
-    console.log(randNum);
+    // console.log(randNum);
+    var song = defaultArr[1];
+    var movie = defaultArr[3]
+    var band = defaultArr[5];
     switch (randNum) {
         case 0:
-            defaultSpotifyThis(defaultArr[1]);
+            defaultSpotifyThis(song);
             break;
         case 1:
-            movieThis(defaultArr[3]);
+            movieThis(movie);
             break;
         case 2:
-            concertThis(defaultArr[5]);
+            concertThis(band);
             break;
     }
 
 }
-
 
 switch (searchType) {
 
