@@ -7,7 +7,7 @@
 ![movie-this gif](https://github.com/JASEpstein/hw9-liri-node-app/blob/master/readme-gifs/movie-this.gif)
 3. Look up a song (type `spotify-this-song` *song name*)
 ![song-this gif](https://github.com/JASEpstein/hw9-liri-node-app/blob/master/readme-gifs/spotify-this.gif)
-4. Default behavior (type `do-what-it-says`)
+4. Default behavior which randomly chooses between the above three actions (type `do-what-it-says`)
 ![default-this gif](https://github.com/JASEpstein/hw9-liri-node-app/blob/master/readme-gifs/default-this.gif)
 
 ## Contributors
